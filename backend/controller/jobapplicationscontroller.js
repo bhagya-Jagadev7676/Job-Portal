@@ -24,7 +24,7 @@ export const applyjob=async(req,res)=>{
             return res.status(404).json({error:"jobid in valid"})
         }
 
-        const newappliction=new jobsapplicationmodel({...req.body,jobid:jobid,userid:userid});
+        const newappliction=new jobsapplication({...req.body,jobid:jobid,userid:userid});
         await newappliction.save();
         return res.status(200).json({message:"job applied successfully",application:newappliction});
     } catch (error) {
@@ -48,5 +48,37 @@ export const getapplicationsoflogineduser=async(req,res)=>{
         return res.status(200).json({message:"applications fetched successfully",applications:applications})
     } catch (error) {
         return res.status(500).json({error:'internal server error'+error.message});
+    }
+}
+
+export const updateapplication=async (req,res)=>{
+    try {
+        let id=req.params.id;
+        if(!id){
+            return res.status(400).json({error:'id is required'});
+        }
+        const updateapplication= await jobsapplicationmodel.findByIdAndUpdate(id,req.body);
+        if(!application){
+            return res.status(404).json({error:"job application not found updated failed"})
+        }
+        return res.status(200).json({message:"job application updated successfully",application:updateapplication})
+    } catch (error) {
+        return res.status(500).json({error:"internal server error"+error})
+    }
+}
+
+export const deleteapplication=async (req,res)=>{
+    try {
+        let id=req.params.id;
+        if(!id){
+            return res.status(400).json({error:'id is required'});
+        }
+        const deleteteapplication= await jobsapplicationmodel.findByIdAndUpdate(id,req.body);
+        if(!application){
+            return res.status(404).json({error:"job application not found delete failed"})
+        }
+        return res.status(200).json({message:"job application deleted successfully",application:deleteapplication})
+    } catch (error) {
+        return res.status(500).json({error:"internal server error"+error})
     }
 }
