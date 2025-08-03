@@ -18,29 +18,33 @@ const jobschema = new mongoose.Schema({
         enum: ["Full Time", "Part Time", "Internship"],
         required: true
     },
-    minsalaryrange: {
-        type: Number,
-        required: true
+    minsalaryrange: { 
+        type: Number, 
+        required: true 
     },
-    maxsalaryrange: {
+    maxsalaryrange: { 
         type: Number,
-        required: true
+        required: true 
         },
-    requiredexperience: {
-        type: String,
-        required: true
+    requiredexperience: { 
+        type: String, 
+        required: true 
     },
     requireddegree:[],
-    company: {
+    company: { 
         type: String,
         required: true
     },
-    shifts: {
+    shifts: { 
         type: String,
         enum: ["Day", "Night", "Both"],
-        required: true
+        required: true 
     },
     requiredskills: [],
+    applyLink: {
+        type: String,
+        required: true
+    },
     userid:{type:mongoose.Schema.Types.ObjectId,ref:"users"},
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }

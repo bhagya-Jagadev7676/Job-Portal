@@ -1,5 +1,6 @@
 import usermodel from '../models/usermodel.js';
 import bcrypt from 'bcryptjs'
+import nodemailer from 'nodemailer';
 
 
 export const register=async(req,res)=>{

@@ -1,6 +1,10 @@
+import mongoose from "mongoose";
 import jobmodel from "../models/jobsmodel.js";
 import usermodel from "../models/usermodel.js";
-
+import {fetchJobsFromAPI,
+processJobWithAI,
+saveJobToDB,
+fetchProcessAndStoreJobs} from '../services/services.js'
 export const postjob=async(req,res)=>{
     try {
         const adminid=req.params.adminid;
@@ -29,12 +33,13 @@ export const postjob=async(req,res)=>{
     }
 }
 
+
 export const getalljobs=async(req,res)=>{
     try {
         const jobs=await jobmodel.find();
         return res.status(200).json({message:"jobs fetched successfully",jobs:jobs})
     } catch (error) {
-        return res.status(500).json({error:'internal server error'+error.message});
+    return res.status(500).json({error:'internal server error'+error.message});
     }
 }
 
@@ -53,6 +58,8 @@ export const getjobbyid=async(req,res)=>{
         return res.status(500).json({error:'internal server error'+error.message});
     }
 }
+
+
 
 export  const updatejob=async(req,res)=>{
     try {
@@ -96,7 +103,7 @@ export  const deletejob=async(req,res)=>{
        //how is admin or not
     let userdetails=await usermodel.findById(adminid);//null
     if(!userdetails){
-        return res.status(404).json({error:"user not found"})  
+        return res.status(404).json({error:"user not found"}) 
     }
     if(userdetails.isadmin!==true){
         return res.status(400).json({error:"only admin can update jobs"})
@@ -117,3 +124,30 @@ export  const deletejob=async(req,res)=>{
         return res.status(500).json({error:'internal server error'+error.message});
     }
 }
+
+
+// In your controller
+export const importJobs = async (req, res) => {
+try {
+    const results = await fetchProcessAndStoreJobs('6889ee4896956f2ca0c9a512');
+    
+    if (results.every(r => !r.success)) {
+    return res.status(400).json({
+        success: false,
+        message: 'All jobs failed to process',
+        results
+    });
+    }
+
+    res.json({
+    success: true,
+    results
+    });
+} catch (error) {
+    console.error('Import jobs error:', error);
+    res.status(500).json({
+    success: false,
+    error: error.message || 'Job import failed'
+    });
+}
+};
